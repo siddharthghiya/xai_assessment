@@ -45,9 +45,18 @@ def rank_lead(lead_data, ranking_desc):
     except ValueError:
         raise ValueError("Invalid score from Grok")
 
-def generate_message(lead_data, is_follow_up=False):
+def generate_message(lead_data, is_follow_up=False, follow_up_number=None):
     if is_follow_up:
-        user_content = f"This is a follow-up message. Lead details: {lead_data}\nCreate a follow-up outreach message. Make it professional, engaging, reference previous contact, tailored to their company and description, and highlight product fit. Keep it under 200 words."
+        if follow_up_number is None:
+            user_content = f"This is a follow-up message. Lead details: {lead_data}\nCreate a follow-up outreach message. Make it professional, engaging, reference previous contact, tailored to their company and description, and highlight product fit. Keep it under 200 words."
+        elif follow_up_number == 1:
+            user_content = f"This is the first follow-up. Reference the initial contact and gently remind them of our previous conversation. Lead details: {lead_data}\nCreate a follow-up outreach message. Make it professional, engaging, tailored to their company and description, and highlight product fit. Keep it under 200 words."
+        elif follow_up_number == 2:
+            user_content = f"This is the second follow-up. Offer additional value or insights related to their needs. Lead details: {lead_data}\nCreate a follow-up outreach message. Make it professional, engaging, reference previous contact, tailored to their company and description, and highlight product fit. Keep it under 200 words."
+        elif follow_up_number == 3:
+            user_content = f"This is the final follow-up. Reach out one last time to check in and see if there's any interest. Lead details: {lead_data}\nCreate a follow-up outreach message. Make it professional, engaging, reference previous contact, tailored to their company and description, and highlight product fit. Keep it under 200 words."
+        else:
+            user_content = f"This is an additional follow-up. Lead details: {lead_data}\nCreate a follow-up outreach message. Make it professional, engaging, reference previous contact, tailored to their company and description, and highlight product fit. Keep it under 200 words."
     else:
         user_content = f"Create a personalized outreach message for this lead: {lead_data}\nMake it professional, engaging, tailored to their company and description, and highlight product fit. Keep it under 200 words."
     messages = [

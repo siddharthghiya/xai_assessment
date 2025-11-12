@@ -168,7 +168,7 @@ for lead in leads:
 
                 if st.button(f"Draft Follow-up for {name}", key=f"followup_draft_{lead_id}"):
                     lead_data = f"Name: {name}, Company: {company}, Email: {email}, Description: {description}"
-                    st.session_state[f"followup_{lead_id}"] = generate_message(lead_data, is_follow_up=True)
+                    st.session_state[f"followup_{lead_id}"] = generate_message(lead_data, is_follow_up=True, follow_up_number=follow_up_count + 1)
                     st.session_state[followup_shown_key] = True
                     st.session_state["expanded_state"][expander_key] = True
                     st.rerun()
