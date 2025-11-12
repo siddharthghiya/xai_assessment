@@ -31,7 +31,8 @@ This is a simple prototype for a Grok-powered Sales Development Representative (
 1. Ensure Docker and Docker Compose are installed.
 2. Build and run: `docker-compose up --build`
 3. Access the app at `http://localhost:8501`
-4. Note: Set GROK_API_KEY in your environment or .env before building.
+4. **Note**: When the Docker container is first created and started, the system automatically populates the database with some random temporary leads for demonstration purposes. These are generated via the `populate_tmp_leads.py` script.
+5. Note: Set GROK_API_KEY in your environment or .env before building.
 
 ### Troubleshooting
 - **API Errors**: Ensure GROK_API_KEY is set and valid in .env. The call uses 'grok-4-latest' model with system/user messages, stream=False, temperature=0. Check endpoint in grok_api.py if different.
