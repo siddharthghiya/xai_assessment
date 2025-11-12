@@ -1,6 +1,7 @@
 import sqlite3
 import json # <--- ADDED IMPORT
 from grok_api import rank_lead
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def init_db():
     conn = sqlite3.connect('leads.db')
@@ -37,6 +38,14 @@ def init_db():
             value TEXT
         )
     ''')
+
+    # Set default ranking description if not exists
+    default_ranking_desc = "Prioritize leads based on company size, industry relevance to our tech solutions, the lead's role in purchasing decisions, demonstrated interest in similar products, and estimated budget capacity. Focus on high-potential opportunities that align with our target market."
+    cursor.execute("""
+        INSERT OR IGNORE INTO settings (key, value)
+        VALUES ('ranking_description', ?)
+    """, (default_ranking_desc,))
+
     conn.commit()
     conn.close()
 
@@ -209,17 +218,32 @@ def set_ranking_desc(ranking_desc):
     conn.close()
 
 def re_score_all(ranking_desc):
+    if not ranking_desc:
+        return
+
     leads = get_all_leads(limit=None)
-    for lead in leads:
+    if not leads:
+        return
+
+    def score_lead(lead):
         lead_id = lead[0]
         lead_data = f"Name: {lead[1]}, Email: {lead[3]}, Gender: {lead[15] or 'N/A'}, Age: {lead[16] or 'N/A'}, Profession: {lead[17] or 'N/A'}, Industry: {lead[18] or 'N/A'}, Income Level: {lead[19] or 'N/A'}, Location: {lead[20] or 'N/A'}, Preferred Contact: {lead[21] or 'N/A'}"
-        if ranking_desc:
-            try:
-                score = rank_lead(lead_data, ranking_desc)
-                update_score(lead_id, score)
-            except Exception as e:
-                print(f"Error re-scoring lead ID {lead_id}: {str(e)}")
-                pass  # Skip if error
+        try:
+            score = rank_lead(lead_data, ranking_desc)
+            update_score(lead_id, score)
+            return lead_id, score
+        except Exception as e:
+            print(f"Error re-scoring lead ID {lead_id}: {str(e)}")
+            return lead_id, None
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_lead = {executor.submit(score_lead, lead): lead for lead in leads}
+        for future in as_completed(future_to_lead):
+            lead_id, score = future.result()
+            if score is not None:
+                print(f"Successfully re-scored lead {lead_id} with score {score}")
+            else:
+                print(f"Failed to re-score lead {lead_id}")
 
 # Initialize the database on import
 init_db()

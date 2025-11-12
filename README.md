@@ -50,7 +50,6 @@ This is a simple prototype for a Grok-powered Sales Development Representative (
     - If contacted but no response: Draft and confirm sending follow-up messages.
     - Update response status (responded or not).
     - Mark interest level (interested or not).
-    - Schedule meetings with date and time pickers.
     - Record sale outcomes (completed or not).
   - View progress bars and message histories for each lead.
 
