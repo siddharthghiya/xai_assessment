@@ -40,7 +40,18 @@ This is a simple prototype for a Grok-powered Sales Development Representative (
 - **Dependencies**: If pip install fails, check Python version (3.9+ recommended).
 
 ### Usage
-- Fill in the form and submit to add/process a lead.
-- View processed leads below the form.
+- **Update Ranking Criteria**: Navigate to the "Ranking Description" page in the sidebar. Enter or update the ranking description in the text area, then click "Update Ranking Description". This will save the new criteria and automatically re-score and re-rank all existing leads based on the updated description.
+- **Add a New Lead**: Go to the "Add Lead" page. Fill in the lead details (name, company, email, description) and submit the form. The system will automatically score the lead using Grok API based on the current ranking criteria and generate a personalized outreach message.
+- **Track Leads Workflow**: Navigate to the "Track Leads" page to manage and progress leads through the pipeline:
+  - Search for leads by name, company, or email, with pagination to browse results.
+  - Expand individual lead entries to view details (email, description, score, status, follow-up count, message history).
+  - Interact with leads based on their current status:
+    - If not contacted: Draft and confirm sending an initial outreach message.
+    - If contacted but no response: Draft and confirm sending follow-up messages.
+    - Update response status (responded or not).
+    - Mark interest level (interested or not).
+    - Schedule meetings with date and time pickers.
+    - Record sale outcomes (completed or not).
+  - View progress bars and message histories for each lead.
 
 This prototype is minimal for demo purposes. Expand as needed for full features like advanced evals or search.
